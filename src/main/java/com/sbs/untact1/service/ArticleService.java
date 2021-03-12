@@ -60,5 +60,14 @@ public class ArticleService {
 	public Article getForPrintArticle(int id) {
 		return articleDao.getForPrintArticle(id);
 	}
+
+	public List<Article> getForPrintArticles(String searchKeyword, String searchKeywordType) {
+		return articleDao.getForPrintArticles(searchKeyword, searchKeywordType);
+	}
+
+	public void  increaseArticleHit(Integer id) {
+		articleDao.increaseArticleHit(id);
+		
+	}
 	
 }

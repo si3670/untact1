@@ -22,7 +22,7 @@
 	<!-- public Member getMember(@Param("loginId")String loginId); -->
 	<select id="getMember" resultType="Member">
 		SELECT * FROM `member` WHERE
-		loginId = #{id}
+		id = #{id}
 	</select>
 
 	<select id="getMemberByLoginId" resultType="Member">

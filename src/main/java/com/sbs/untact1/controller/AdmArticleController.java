@@ -18,11 +18,11 @@ import com.sbs.untact1.util.Util;
 
 //할 것 : 댓글추가부터 
 @Controller
-public class UsrArticleController {
+public class AdmArticleController {
 	@Autowired
 	private ArticleService articleService;
 
-	@RequestMapping("/usr/article/detail")
+	@RequestMapping("/adm/article/detail")
 	@ResponseBody
 	public ResultData showDetail(Integer id) {
 		articleService.increaseArticleHit(id);
@@ -37,7 +37,7 @@ public class UsrArticleController {
 		return new ResultData("S-1", "성공", "article", article);
 	}
 
-	@RequestMapping("/usr/article/list")
+	@RequestMapping("/adm/article/list")
 	@ResponseBody
 	public List<Article> showList(String searchKeyword, String searchKeywordType) {
 		if(searchKeywordType != null) {
@@ -60,7 +60,7 @@ public class UsrArticleController {
 		return articleService.getForPrintArticles(searchKeyword,searchKeywordType);
 	}
 
-	@RequestMapping("/usr/article/doAdd")
+	@RequestMapping("/adm/article/doAdd")
 	@ResponseBody
 	public ResultData doAdd(@RequestParam Map<String, Object> param, HttpSession session) {
 		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
@@ -77,7 +77,7 @@ public class UsrArticleController {
 
 	}
 
-	@RequestMapping("/usr/article/doDelete")
+	@RequestMapping("/adm/article/doDelete")
 	@ResponseBody
 	public ResultData doDelete(Integer id, HttpSession session) {
 		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
@@ -96,7 +96,7 @@ public class UsrArticleController {
 		return articleService.deleteArticle(id);
 	}
 
-	@RequestMapping("/usr/article/doModify")
+	@RequestMapping("/adm/article/doModify")
 	@ResponseBody
 	public ResultData doModify(int id, String title, String body, HttpSession session) {
 		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);

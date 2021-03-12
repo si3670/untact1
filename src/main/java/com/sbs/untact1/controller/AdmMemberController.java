@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sbs.untact1.dto.Member;
 import com.sbs.untact1.dto.ResultData;
 import com.sbs.untact1.service.MemberService;
+import com.sbs.untact1.util.Util;
 
 @Controller
-public class UsrMembeController {
+public class AdmMemberController {
 	@Autowired
 	private MemberService memberService;
 	
-	@RequestMapping("/usr/member/doJoin")
+	@RequestMapping("/adm/member/doJoin")
 	@ResponseBody
 	public ResultData doJoin(@RequestParam Map<String, Object> param) {
 		if (param.get("loginId") == null) {
@@ -50,35 +51,48 @@ public class UsrMembeController {
 
 	}
 	
-	@RequestMapping("/usr/member/doLogin")
+	@RequestMapping("/adm/member/login")
+	public String login() {
+		return "adm/member/login";
+	}
+	
+	@RequestMapping("/adm/member/doLogin")
 	@ResponseBody
-	public ResultData doLogin(String loginId, String loginPw, HttpSession session) {
-		
+	public String doLogin(String loginId, String loginPw, HttpSession session) {
 		if (loginId == null) {
-			return new ResultData("F-1", "loginId을 입력해주세요");
+			return Util.msgAndBack("loginId을 입력해주세요");
 		}
 		Member existingMember = memberService.getMemberByLoginId(loginId);
 		if(existingMember == null) {
-			return new ResultData("F-2", "존재하지 않는 아이디입니다.");
+			return Util.msgAndBack("존재하지 않는 아이디입니다.");
 		}
 		
 		if (loginPw == null) {
-			return new ResultData("F-1", "loginPw을 입력해주세요");
+			return Util.msgAndBack("loginPw을 입력해주세요");
 		}
 		if(existingMember.getLoginPw().equals(loginPw)==false) {
-			return new ResultData("F-3", "비밀번호를 확인해주세요.");
+			return Util.msgAndBack("비밀번호를 확인해주세요.");
+		}
+		if ( memberService.isAdmin(existingMember) == false ) {
+			return Util.msgAndBack("관리자만 접근할 수 있는 페이지 입니다.");
 		}
 		session.setAttribute("loginedMemberId", existingMember.getId());
-		return new ResultData("P-1", String.format("%s 로그인 성공", existingMember.getLoginId()));
-	}
-	@RequestMapping("/usr/member/doLogout")
-	@ResponseBody
-	public ResultData doLogout(HttpSession session) {
-		session.removeAttribute("loginedMemberId");
-		return new ResultData("P-1", "로그아웃 성공");
+		
+		String msg = String.format("%s님 환영합니다.", existingMember.getNickname());
+
+
+		return Util.msgAndReplace(msg, "../home/main");
 	}
 	
-	@RequestMapping("/usr/member/doModify")
+	
+	@RequestMapping("/adm/member/doLogout")
+	@ResponseBody
+	public String doLogout(HttpSession session) {
+		session.removeAttribute("loginedMemberId");
+		return Util.msgAndReplace("로그아웃 되었습니다.", "../member/login");
+	}
+	
+	@RequestMapping("/adm/member/doModify")
 	@ResponseBody
 	public ResultData doModify(@RequestParam Map<String, Object> param, HttpSession session) {
 		if(param.isEmpty()) {

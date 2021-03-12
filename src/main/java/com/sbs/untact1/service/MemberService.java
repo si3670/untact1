@@ -37,6 +37,15 @@ public class MemberService {
 	public boolean isAdmin(int actorId) {
 		return actorId == 1;
 	}
+	
+	public boolean isAdmin(Member actor) {
+		return isAdmin(actor.getId());
+	}
+
+	public Member getMemberByAuthKey(String authKey) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 }
